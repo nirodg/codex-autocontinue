@@ -119,7 +119,7 @@ If this tool gave you your night's sleep back:
 - ⭐ **Star** the repo
 - 🍴 **Fork** it and make it yours
 - 📣 **Share** it with someone who keeps hitting limits
-- ❤️ **[Sponsor](https://github.com/sponsors/YOUR_GITHUB_USERNAME)** to keep the ideas coming
+- ❤️ **[Sponsor](https://github.com/sponsors/nirodg)** to keep the ideas coming
 
 ## 🚨 Disclaimer
 
