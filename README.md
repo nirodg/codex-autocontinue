@@ -10,6 +10,18 @@ A tiny Python script that watches your Codex (GPT) window, reads the *"try again
 
 ---
 
+## 😴 TL;DR
+
+**Can't be bothered to wait until your limit resets?** Me neither. Start the script and go to sleep. The moment the reset time hits, it types `continue` and presses Send. You wake up to finished work.
+
+```bash
+source .venv/bin/activate && python3 auto_continue.py -v
+```
+
+> 👉 Just make sure Codex is **visible on screen** and set to **Full access** (see [Before you walk away](#-before-you-walk-away)).
+
+---
+
 ## ✨ What it does
 
 | | |
@@ -24,17 +36,38 @@ A tiny Python script that watches your Codex (GPT) window, reads the *"try again
 
 ## 🚀 Quick start (Ubuntu / X11)
 
+✅ **Tested on Ubuntu 24.04.4 LTS** (Xorg session).
+
+> Ubuntu 24.04 logs you into **Wayland** by default, which blocks screenshots and fake clicks. At the login screen click the ⚙️ gear and choose **"Ubuntu on Xorg"**.
+
 ```bash
 git clone https://github.com/YOUR_GITHUB_USERNAME/codex-autocontinue.git
 cd codex-autocontinue
 
-sudo apt install tesseract-ocr wmctrl xdotool python3-xlib
+# system tools
+sudo apt install tesseract-ocr wmctrl xdotool python3-xlib python3-venv
+
+# always use a virtual environment, then install deps INSIDE it
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 
 python3 auto_continue.py --list          # find your Codex window + monitors
 python3 auto_continue.py --test -v       # sanity check: types "Test" and sends it
 python3 auto_continue.py -v              # the real thing: leave it running
 ```
+
+Every new terminal: `source .venv/bin/activate` before running the script.
+
+## 🛌 Before you walk away
+
+Run through this checklist, or the bot will click into the void:
+
+- 👁️ **Codex must be visible** on screen: not minimized, not covered by another window, on the current workspace. The script reads pixels and clicks coordinates, so if it can't see Codex, it can't do anything.
+- 📝 **Give Codex clear instructions** before the limit hits, so a plain `continue` actually means something ("finish the refactor, run the tests, fix what breaks").
+- 🔓 **Set Codex permissions to Full access** (or at least an approval mode you're happy with). Otherwise it will resume, hit the next *"approve this command?"* prompt, and sit there waiting for you all night. Full access is powerful, so only use it in projects you trust.
+- 🔆 **Keep the screen awake and unlocked** (disable auto-lock / blank screen while it waits).
+- 🧪 Run `--test -v` once first to confirm typing and the Send click work on your setup.
 
 ## 🎛️ Options
 
@@ -87,6 +120,10 @@ If this tool gave you your night's sleep back:
 - 🍴 **Fork** it and make it yours
 - 📣 **Share** it with someone who keeps hitting limits
 - ❤️ **[Sponsor](https://github.com/sponsors/YOUR_GITHUB_USERNAME)** to keep the ideas coming
+
+## 🚨 Disclaimer
+
+This software is provided **"as is", without warranty of any kind**. It moves your mouse, types on your keyboard and clicks buttons for you, and with Codex on Full access it lets an AI run commands unattended. **You use it entirely at your own risk. The author and contributors are not responsible for anything**: lost or corrupted work, wrong or destructive commands run by Codex, unexpected clicks or keystrokes, usage charges, account issues, or any other damage or consequence. Back up your work, keep your project under version control, and check the terms of service of the tools you automate.
 
 ## 📄 License
 
