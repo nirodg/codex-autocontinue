@@ -1,0 +1,5 @@
+mss
+pytesseract
+pillow
+numpy
+python-xlib
