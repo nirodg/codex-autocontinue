@@ -153,6 +153,8 @@ def activate(wid):
 
 # ---------- screen / OCR (window region only) ----------
 def grab_region(x, y, w, h):
+    if w <= 0 or h <= 0:
+        return None, 0, 0
     with MSS() as sct:
         vs = sct.monitors[0]  # virtual screen bounds
         x0, y0 = max(x, vs["left"]), max(y, vs["top"])
@@ -271,9 +273,15 @@ def act(message=MESSAGE):
     vlog("done; restoring your previous window and mouse position")
     time.sleep(0.5)
     if prev_win and prev_win != str(w["id"]):
-        sh("wmctrl", "-i", "-a", hex(int(prev_win)))
+        try:
+            sh("wmctrl", "-i", "-a", hex(int(prev_win)))
+        except (ValueError, OSError):
+            vlog("could not restore previous window")
     if mx and my:
-        sh("xdotool", "mousemove", mx.group(1), my.group(1))
+        try:
+            sh("xdotool", "mousemove", mx.group(1), my.group(1))
+        except (ValueError, OSError):
+            pass
     return True
 
 
@@ -297,7 +305,7 @@ def main():
             time.sleep(TEST_INTERVAL)
 
     print("watching... (Ctrl+C to stop)")
-    target, last = None, "init"
+    target, acted_on, last = None, None, "init"
     while True:
         w = find_codex()
         state = (w["id"], w["pid"]) if w else None
@@ -311,10 +319,17 @@ def main():
             last = state
         if w:
             x, y, ww, hh = geom_of(w)
+            if ww <= 0 or hh <= 0:
+                vlog(f"skip bad geometry ({ww}x{hh})")
+                time.sleep(POLL_SECONDS)
+                continue
             img, _, _ = grab_region(x, y, ww, hh)
+            if img is None:
+                time.sleep(POLL_SECONDS)
+                continue
             vlog(f"checking Codex window ({ww}x{hh} at {x},{y}) for a 'try again at / resets on' message")
             t = find_reset_time(ocr(img))
-            if t and t != target:
+            if t and t != target and t != acted_on:
                 target = t
                 print("reset time:", target)
             elif not t:
@@ -324,6 +339,7 @@ def main():
             vlog(f"reset at {target:%Y-%m-%d %H:%M}, {max(wait, 0):.0f}s to go (incl. {EXTRA_DELAY}s buffer)")
             if wait <= 0:
                 print("reached, acting")
+                acted_on = target
                 act()
                 target = None
                 time.sleep(60)
