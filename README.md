@@ -1,5 +1,7 @@
 # ⏰ codex-autocontinue
 
+![Bot's logo](bot.png)
+
 **Hit your Codex usage limit at 11 PM? Go to sleep. It types `continue` for you when the limit resets.**
 
 A tiny Python script that watches your Codex (GPT) window, reads the *"try again at Oct 17, 2026, 3:12 AM"* message with OCR, waits for that exact moment, then clicks the input, types `continue` and hits the blue send button. No API keys, no hacks, just a bot doing what you'd do with your own hands.
